@@ -1,38 +1,41 @@
 import pygame
 import time
+import os
+import random
 
-# Initialize pygame mixer
 pygame.mixer.init()
 
-# Create 8 channels
 channels = [pygame.mixer.Channel(i) for i in range(8)]
 
-# List of audio files for the channels (replace these with your actual file paths)
-audio_files = [
-    "audio1.wav",
-    "audio2.wav",
-    "audio3.wav",
-    "audio4.wav",
-    "audio5.wav",
-    "audio6.wav",
-    "audio7.wav",
-    "audio8.wav",
-]
+audio_dir = "/Users/cemerturkan/Music/Logic/Bounces/exhibition/d"
+counter = 0
+audio_files = []
+for f_name in os.listdir(audio_dir):
+    if f_name.endswith('.mp3') and (counter < 8):
+        path_to_file = audio_dir + '/' + f_name
+        audio_files.append(path_to_file)
+        counter += 1
+    elif counter >= 8:
+        break
 
-# Load the audio files into pygame.mixer.Sound objects
 sounds = [pygame.mixer.Sound(file) for file in audio_files]
 
-# Function to play sounds in order on their respective channels
-def play_sounds_in_order():
-    for i, sound in enumerate(sounds):
-        print(f"Playing sound {i + 1} on channel {i}...")
-        channels[i].play(sound)
-        while channels[i].get_busy():  # Wait until the current sound finishes
-            time.sleep(0.1)
+def play_two_random_sounds():
+    if len(sounds) < 2:
+        print("Not enough sounds to play.")
+        return
 
-# Run the function to play the sounds
+    random_indices = random.sample(range(len(sounds)), 2)
+    sound1, sound2 = sounds[random_indices[0]], sounds[random_indices[1]]
+
+    print(f"Playing sound {random_indices[0] + 1} and sound {random_indices[1] + 1} simultaneously...")
+    channels[0].play(sound1)
+    channels[1].play(sound2)
+
+    while channels[0].get_busy() or channels[1].get_busy():
+        time.sleep(0.1)
+
 try:
-    play_sounds_in_order()
+    play_two_random_sounds()
 finally:
-    # Quit the mixer when done
     pygame.mixer.quit()
