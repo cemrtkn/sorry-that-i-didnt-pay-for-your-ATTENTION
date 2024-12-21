@@ -27,6 +27,7 @@ label_to_color = {label: tuple(int(c * 255) for c in rgb) for label, rgb in labe
 
 # Pygame Setup
 pygame.init()
+
 screen = pygame.display.set_mode((800, 800))
 pygame.display.set_caption("Interactive 2D PCA Visualization with Labels")
 clock = pygame.time.Clock()
