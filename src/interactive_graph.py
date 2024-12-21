@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.decomposition import PCA
 import pandas as pd
 from matplotlib import cm
+import os
 
 data_path = "/Users/cemerturkan/Desktop/personal_projects/data/output_embed/"
 metadata_df = pd.read_csv(data_path + 'embeddings_metadata.csv', index_col=0)
@@ -27,6 +28,21 @@ label_to_color = {label: tuple(int(c * 255) for c in rgb) for label, rgb in labe
 
 # Pygame Setup
 pygame.init()
+pygame.mixer.init()
+pygame.mixer.set_num_channels(48)
+
+channels = [pygame.mixer.Channel(i) for i in range(48)]
+
+# change this logic so that the indices match the real points user is closest to
+# right now it initializes based on the order in the directory
+audio_dir = "/Users/cemerturkan/Desktop/personal_projects/data/songs"
+audio_files = []
+for f_name in os.listdir(audio_dir):
+    if f_name.endswith('.mp3'):
+        path_to_file = audio_dir + '/' + f_name
+        audio_files.append(path_to_file)
+
+sounds = [pygame.mixer.Sound(file) for file in audio_files]
 
 screen = pygame.display.set_mode((800, 800))
 pygame.display.set_caption("Interactive 2D PCA Visualization with Labels")
@@ -44,7 +60,7 @@ def find_closest_point(point, points):
     distances = np.linalg.norm(points - point, axis=1)
     return np.argmin(distances)
 
-# Main loop
+prev_closest_idx = 38 # out of bounds
 running = True
 while running:
     screen.fill(WHITE)
@@ -69,6 +85,13 @@ while running:
     closest_idx = find_closest_point(user_point, embeddings_2d)
     closest_point = embeddings_2d[closest_idx]
 
+    if closest_idx != prev_closest_idx:
+        channels[prev_closest_idx].stop()
+        channels[closest_idx].play(sounds[closest_idx])
+    
+
+
+
     # Draw all points
     for idx, (point, label) in enumerate(zip(embeddings_2d, labels)):
         color = label_to_color[label]
@@ -78,8 +101,10 @@ while running:
     # Draw the user-controlled point
     pygame.draw.circle(screen, GREEN, (int(user_point[0]), int(user_point[1])), 8)
 
+    prev_closest_idx = closest_idx
     # Display updates
     pygame.display.flip()
     clock.tick(30)
 
 pygame.quit()
+pygame.mixer.quit()
