@@ -33,14 +33,12 @@ pygame.mixer.set_num_channels(48)
 
 channels = [pygame.mixer.Channel(i) for i in range(48)]
 
-# change this logic so that the indices match the real points user is closest to
-# right now it initializes based on the order in the directory
 audio_dir = "/Users/cemerturkan/Desktop/personal_projects/data/songs"
 audio_files = []
-for f_name in os.listdir(audio_dir):
-    if f_name.endswith('.mp3'):
-        path_to_file = audio_dir + '/' + f_name
-        audio_files.append(path_to_file)
+for f_name in list(metadata_df.index):
+    f_name = f_name.split('_')[-1]
+    audio_path =audio_dir + '/' +f_name + '.mp3'
+    audio_files.append(audio_path)
 
 sounds = [pygame.mixer.Sound(file) for file in audio_files]
 
