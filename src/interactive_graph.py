@@ -5,7 +5,8 @@ import pandas as pd
 from matplotlib import cm
 import os
 
-data_path = "/Users/cemerturkan/Desktop/personal_projects/data/output_embed/"
+
+data_path = "/home/cemerturkan/Desktop/projects/find-my-music/data/output_embed/"
 metadata_df = pd.read_csv(data_path + 'embeddings_metadata.csv', index_col=0)
 embeddings = np.load(data_path + 'embeddings.npy')
 
@@ -27,13 +28,14 @@ label_to_color = {label: cm.tab20(i / len(unique_labels))[:3] for i, label in en
 label_to_color = {label: tuple(int(c * 255) for c in rgb) for label, rgb in label_to_color.items()}  # Convert to 0-255 RGB
 
 # Pygame Setup
+os.environ["SDL_AUDIODRIVER"] = "alsa"  # Use ALSA driver
 pygame.init()
-pygame.mixer.init()
-pygame.mixer.set_num_channels(48)
+pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=4096)
+pygame.mixer.set_num_channels(1)
 
-channels = [pygame.mixer.Channel(i) for i in range(48)]
+channels = [pygame.mixer.Channel(i) for i in range(1)]
 
-audio_dir = "/Users/cemerturkan/Desktop/personal_projects/data/songs"
+audio_dir = "/home/cemerturkan/Desktop/projects/find-my-music/data/songs/"
 audio_files = []
 for f_name in list(metadata_df.index):
     f_name = f_name.split('_')[-1]
@@ -84,8 +86,8 @@ while running:
     closest_point = embeddings_2d[closest_idx]
 
     if closest_idx != prev_closest_idx:
-        channels[prev_closest_idx].stop()
-        channels[closest_idx].play(sounds[closest_idx])
+        channels[0].stop()
+        channels[0].play(sounds[closest_idx])
     
 
 
