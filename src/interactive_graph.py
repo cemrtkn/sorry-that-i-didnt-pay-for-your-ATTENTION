@@ -40,7 +40,8 @@ pygame.mixer.set_num_channels(1)
 factory = RPiGPIOFactory()
 ldr1 = MCP3008(channel=0, pin_factory=factory)
 ldr2 = MCP3008(channel=1, pin_factory=factory)
-baseline = ldr1.value
+baseline1 = ldr1.value
+baseline2 = ldr2.value
 
 channels = [pygame.mixer.Channel(i) for i in range(1)]
 
@@ -79,15 +80,23 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # Handle keyboard inputs for arrow keys     
-    x = 1 - (ldr1.value/baseline)
-    y = 1 - (ldr2.value/baseline)
+    # Handle keyboard inputs for arrow keys
+    # get the max of up and down so we know what side we are at
+    # ldr value is smaller the closer the light source is     
+    up_down = [(ldr1.value/baseline1),(ldr2.value/baseline2)]
+
+    y = max(up_down)
+    y_side = up_down.index(y)
+    y = round(y,1)
+    if y_side == 1: #down
+        y = -1
+        
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]: user_point[0] -= 2
     if keys[pygame.K_RIGHT]: user_point[0] += 2
-    print(user_point[0])
-    user_point[0] = 800*x
-    user_point[1] = 800*y
+    print(up_down)
+    print(400 + (400*y))
+    user_point[1] = 400 + (300*y)
 #     if keys[pygame.K_UP]: user_point[1] -= 2
 #     if keys[pygame.K_DOWN]: user_point[1] += 2
 
