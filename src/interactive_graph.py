@@ -4,6 +4,8 @@ from sklearn.decomposition import PCA
 import pandas as pd
 from matplotlib import cm
 import os
+from gpiozero import MCP3008
+from gpiozero.pins.rpigpio import RPiGPIOFactory  # Import RPi.GPIO pin factory
 
 
 data_path = "/home/cemerturkan/Desktop/projects/find-my-music/data/output_embed/"
@@ -32,6 +34,13 @@ os.environ["SDL_AUDIODRIVER"] = "alsa"  # Use ALSA driver
 pygame.init()
 pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=4096)
 pygame.mixer.set_num_channels(1)
+
+
+# Set the pin factory to RPi.GPIO
+factory = RPiGPIOFactory()
+ldr1 = MCP3008(channel=0, pin_factory=factory)
+ldr2 = MCP3008(channel=1, pin_factory=factory)
+baseline = ldr1.value
 
 channels = [pygame.mixer.Channel(i) for i in range(1)]
 
@@ -70,12 +79,17 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # Handle keyboard inputs for arrow keys
+    # Handle keyboard inputs for arrow keys     
+    x = 1 - (ldr1.value/baseline)
+    y = 1 - (ldr2.value/baseline)
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]: user_point[0] -= 2
     if keys[pygame.K_RIGHT]: user_point[0] += 2
-    if keys[pygame.K_UP]: user_point[1] -= 2
-    if keys[pygame.K_DOWN]: user_point[1] += 2
+    print(user_point[0])
+    user_point[0] = 800*x
+    user_point[1] = 800*y
+#     if keys[pygame.K_UP]: user_point[1] -= 2
+#     if keys[pygame.K_DOWN]: user_point[1] += 2
 
     # Ensure the user-controlled point stays within bounds
     user_point[0] = np.clip(user_point[0], 0, 800)
