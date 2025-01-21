@@ -85,18 +85,18 @@ while running:
     # ldr value is smaller the closer the light source is     
     up_down = [(ldr1.value/baseline1),(ldr2.value/baseline2)]
 
-    y = max(up_down)
+    y = min(up_down)
     y_side = up_down.index(y)
-    y = round(y,1)
+    y = round(y,2)
     if y_side == 1: #down
-        y = -1
+        y *= -1
         
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]: user_point[0] -= 2
     if keys[pygame.K_RIGHT]: user_point[0] += 2
     print(up_down)
     print(400 + (400*y))
-    user_point[1] = 400 + (300*y)
+    user_point[1] = 400 + (400*y)
 #     if keys[pygame.K_UP]: user_point[1] -= 2
 #     if keys[pygame.K_DOWN]: user_point[1] += 2
 
