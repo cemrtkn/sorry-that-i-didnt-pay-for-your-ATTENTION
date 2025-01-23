@@ -7,6 +7,31 @@ import os
 from gpiozero import MCP3008
 from gpiozero.pins.rpigpio import RPiGPIOFactory  # Import RPi.GPIO pin factory
 
+def lr_to_coordinate(lr_list):
+    coord = min(lr_list)
+    side = lr_list.index(coord)
+    coord = round(coord,2)
+    if side == 1: #down
+        coord *= -1
+    return coord
+
+
+def calculate_position(up_down, right_left):
+    # normalize the ratios
+    ldr1_norm, ldr2_norm = up_down
+    ldr3_norm, ldr4_norm = right_left
+    
+    # comoute contributions to x and y
+    y = ldr1_norm - ldr2_norm
+    x = ldr4_norm - ldr3_norm
+    
+    # normalize the coordinates
+    magnitude = max(abs(x), abs(y),1)
+    x /= magnitude
+    y /= magnitude
+
+    
+    return x,y
 
 data_path = "/home/cemerturkan/Desktop/projects/find-my-music/data/output_embed/"
 metadata_df = pd.read_csv(data_path + 'embeddings_metadata.csv', index_col=0)
@@ -40,8 +65,14 @@ pygame.mixer.set_num_channels(1)
 factory = RPiGPIOFactory()
 ldr1 = MCP3008(channel=0, pin_factory=factory)
 ldr2 = MCP3008(channel=1, pin_factory=factory)
+ldr3 = MCP3008(channel=2, pin_factory=factory)
+ldr4 = MCP3008(channel=3, pin_factory=factory)
+
 baseline1 = ldr1.value
 baseline2 = ldr2.value
+baseline3 = ldr3.value
+baseline4 = ldr4.value
+
 
 channels = [pygame.mixer.Channel(i) for i in range(1)]
 
@@ -84,18 +115,26 @@ while running:
     # get the max of up and down so we know what side we are at
     # ldr value is smaller the closer the light source is     
     up_down = [(ldr1.value/baseline1),(ldr2.value/baseline2)]
-
-    y = min(up_down)
-    y_side = up_down.index(y)
-    y = round(y,2)
-    if y_side == 1: #down
-        y *= -1
-        
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT]: user_point[0] -= 2
-    if keys[pygame.K_RIGHT]: user_point[0] += 2
+    right_left = [(ldr3.value/baseline3),(ldr4.value/baseline4)]
+    x,y = calculate_position(up_down, right_left)
+    #x = lr_to_coordinate(right_left)
+    #y = lr_to_coordinate(up_down)
+    print("Up-dow")
     print(up_down)
-    print(400 + (400*y))
+    print(y)
+    print("-"*40)
+
+    print("Right-left")
+    print(right_left)
+    print(x)
+    print("-"*40)
+    
+    
+    #print(up_down)
+    """print("x:", str(400 + (400*x)))
+    print("y:", str(400 + (400*y)))"""
+    
+    user_point[0] = 400 + (400*x)
     user_point[1] = 400 + (400*y)
 #     if keys[pygame.K_UP]: user_point[1] -= 2
 #     if keys[pygame.K_DOWN]: user_point[1] += 2
