@@ -6,6 +6,7 @@ from matplotlib import cm
 import os
 from gpiozero import MCP3008
 from gpiozero.pins.rpigpio import RPiGPIOFactory  # Import RPi.GPIO pin factory
+import math
 
 def lr_to_coordinate(lr_list):
     coord = min(lr_list)
@@ -23,7 +24,13 @@ def calculate_position(up_down, right_left):
     
     # comoute contributions to x and y
     y = ldr1_norm - ldr2_norm
+    #difference_y = ldr1_norm - ldr2_norm
+    #y = math.copysign(1 - abs(difference_y), difference_y)
     x = ldr4_norm - ldr3_norm
+    
+    #difference_x = ldr4_norm - ldr3_norm
+    #x = math.copysign(1 - abs(difference_x), difference_x)
+    
     
     # normalize the coordinates
     magnitude = max(abs(x), abs(y),1)
