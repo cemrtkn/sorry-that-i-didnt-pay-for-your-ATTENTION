@@ -121,8 +121,8 @@ while running:
     # Handle keyboard inputs for arrow keys
     # get the max of up and down so we know what side we are at
     # ldr value is smaller the closer the light source is     
-    up_down = [(ldr1.value/baseline1),(ldr2.value/baseline2)]
-    right_left = [(ldr3.value/baseline3),(ldr4.value/baseline4)]
+    up_down = [(ldr1.value/baseline1),(ldr4.value/baseline4)]
+    right_left = [(ldr2.value/baseline2),(ldr3.value/baseline3)]
     x,y = calculate_position(up_down, right_left)
     #x = lr_to_coordinate(right_left)
     #y = lr_to_coordinate(up_down)
