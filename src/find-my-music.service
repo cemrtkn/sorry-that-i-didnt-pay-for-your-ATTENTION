@@ -1,0 +1,15 @@
+[Unit]
+Description=Find My Music Script
+After=network.target sound.target
+
+[Service]
+WorkingDirectory=/home/cemerturkan/Desktop/projects/find-my-music/
+ExecStart=/home/cemerturkan/Desktop/projects/find-my-music/venv/bin/python3 /home/cemerturkan/Desktop/projects/find-my-music/src/main.py false
+Restart=no
+User=cemerturkan
+Group=cemerturkan
+Environment=DISPLAY=:0
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+
+[Install]
+WantedBy=multi-user.target
