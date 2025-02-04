@@ -8,7 +8,11 @@ from gpiozero import MCP3008
 from gpiozero.pins.rpigpio import RPiGPIOFactory  # Import RPi.GPIO pin factory
 import math
 import sys
-import subprocess
+import threading
+
+def timeout(channel):
+    channel.stop()
+
 
 def check_hdmi_connection():
     paths = [
@@ -92,6 +96,7 @@ def main(visualize=False):
 
 
     channels = [pygame.mixer.Channel(i) for i in range(1)]
+    timer = threading.Timer(120, timeout, args=(channels[0],))
 
     audio_dir = "/home/cemerturkan/Desktop/projects/find-my-music/data/songs/"
     audio_files = []
@@ -113,7 +118,7 @@ def main(visualize=False):
     # Initialize user-controlled point
     user_point = np.array([400, 400])  # Start at the center of the screen
 
-    prev_closest_idx = 38 # out of bounds
+    prev_closest_idx = 51 # out of bounds
     running = True
     while running:           
         # Handle events
@@ -125,7 +130,7 @@ def main(visualize=False):
         right_left = [(ldr2.value/baseline2),(ldr3.value/baseline3)]
         x,y = calculate_position(up_down, right_left)
 
-        print("Up-down")
+        """print("Up-down")
         print(up_down)
         print(y)
         print("-"*40)
@@ -133,7 +138,7 @@ def main(visualize=False):
         print("Right-left")
         print(right_left)
         print(x)
-        print("-"*40)
+        print("-"*40)"""
 
         
         user_point[0] = 400 + (400*x)
@@ -147,10 +152,13 @@ def main(visualize=False):
         # Find the closest point in the embeddings
         closest_idx = find_closest_point(user_point, embeddings_2d)
         closest_point = embeddings_2d[closest_idx]
-
         if closest_idx != prev_closest_idx:
             channels[0].stop()
-            channels[0].play(sounds[closest_idx], loops=-1)
+            channels[0].play(sounds[closest_idx], loops=-1) #play in a loop
+            if timer.is_alive():
+                timer.cancel()
+            timer = threading.Timer(120, timeout, args=(channels[0],))
+            timer.start()
 
         # Draw all points
         if visualize:
