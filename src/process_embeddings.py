@@ -4,9 +4,10 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 
 # Load data
-data_path = "/Users/cemerturkan/Desktop/personal_projects/data/output_embed/"
+data_path = "/home/cemerturkan/Desktop/projects/find-my-music/data/output_embed/"
 metadata_df = pd.read_csv(data_path + 'embeddings_metadata.csv', index_col=0)
 embeddings = np.load(data_path + 'embeddings.npy')
+print
 
 # Apply PCA
 pca = PCA(n_components=2)

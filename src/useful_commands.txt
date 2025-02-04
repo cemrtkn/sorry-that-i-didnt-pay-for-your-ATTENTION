@@ -4,5 +4,6 @@ sudo systemctl daemon-reload
 sudo systemctl enable find-my-music.service
 
 sudo systemctl start find-my-music.service
+sudo systemctl stop find-my-music.service
 
 journalctl -u find-my-music.service -f

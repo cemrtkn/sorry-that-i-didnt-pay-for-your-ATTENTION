@@ -58,7 +58,8 @@ def main(visualize=False):
 
     # Apply PCA
     pca = PCA(n_components=2)
-    embeddings_2d = pca.fit_transform(embeddings)
+    pca_fit = pca.fit(embeddings)
+    embeddings_2d = pca_fit.transform(embeddings)
 
     # Normalize the data with a margin
     margin = 50  # Margin to avoid points at the edges
@@ -149,10 +150,7 @@ def main(visualize=False):
 
         if closest_idx != prev_closest_idx:
             channels[0].stop()
-            channels[0].play(sounds[closest_idx])
-        
-
-
+            channels[0].play(sounds[closest_idx], loops=-1)
 
         # Draw all points
         if visualize:
@@ -175,8 +173,8 @@ def main(visualize=False):
 
 if __name__ == "__main__":
     visualize = sys.argv[1].lower() in ('true', '1', 't', 'y', 'yes')
-    if check_hdmi_connection(): #display attached -> not in automatic script running mode
-        print("script was not run because the user is here")
-    else:
-        main(visualize)
+    #if check_hdmi_connection(): #display attached -> not in automatic script running mode
+    #    print("script was not run because the user is here")
+    #else:
+    main(visualize)
     
