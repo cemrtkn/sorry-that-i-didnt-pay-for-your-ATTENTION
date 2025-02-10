@@ -9,6 +9,7 @@ from gpiozero.pins.rpigpio import RPiGPIOFactory  # Import RPi.GPIO pin factory
 import math
 import sys
 import threading
+from config import embed_dir, audio_dir
 
 def timeout(channel):
     channel.stop()
@@ -53,7 +54,7 @@ def find_closest_point(point, points):
     distances = np.linalg.norm(points - point, axis=1)
     return np.argmin(distances)
 def main(visualize=False):
-    data_path = "/home/cemerturkan/Desktop/projects/find-my-music/data/output_embed/"
+    data_path = embed_dir
     metadata_df = pd.read_csv(data_path + 'embeddings_metadata.csv', index_col=0)
     embeddings = np.load(data_path + 'embeddings.npy')
 
@@ -98,7 +99,7 @@ def main(visualize=False):
     channels = [pygame.mixer.Channel(i) for i in range(1)]
     timer = threading.Timer(120, timeout, args=(channels[0],))
 
-    audio_dir = "/home/cemerturkan/Desktop/projects/find-my-music/data/songs/"
+    audio_dir = audio_dir
     audio_files = []
     for f_name in list(metadata_df.index):
         f_name = f_name.split('_')[-1]
@@ -181,8 +182,8 @@ def main(visualize=False):
 
 if __name__ == "__main__":
     visualize = sys.argv[1].lower() in ('true', '1', 't', 'y', 'yes')
-    #if check_hdmi_connection(): #display attached -> not in automatic script running mode
-    #    print("script was not run because the user is here")
-    #else:
-    main(visualize)
+    if check_hdmi_connection(): #display attached -> not in automatic script running mode
+        print("script was not run because the user is here")
+    else:
+        main(visualize)
     
