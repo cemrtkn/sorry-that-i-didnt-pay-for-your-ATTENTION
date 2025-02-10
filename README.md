@@ -40,18 +40,27 @@ There are 4 photoresistor located at 90 degree angles to each other that represe
 
 This logic is only robust when the distance is in the mid-range (1-1.5 meters to the sensors directly shining at them) but results in reversed reaction when it is close and far. So farther away the observer is closer to the origin, closer they are farther out they are in the 2D space. This is due to this way of position approximation is not being suitable for this context.
 
+A separate thread is initiated to keep a "timer" for 2 mins and if the song closest to the observer doesn't change in that duration, the sound is stopped.
+
 1. Navigate to the directory
 2. ```source venv/bin/activate```
 3. Two modes are available
     i. ```python main.py true``` -> to have the GUI showing position in the 2D embedding space
     ii. ```python main.py false``` -> to run without GUI
 
-A service that calls the script in the venv was created in the Pi that gets triggered upon boot. The script checks for HDMI connection when it is called and only runs interactive code if it is not attached meaning that the Pi is in its "installation mode". 
+A service that calls the script in the venv was created in the Pi that gets triggered upon boot. The script checks for HDMI connection when it is called and only runs interactive code if it is not attached meaning that the Pi is in its "installation mode". The GUI shows clips from different genres/classes in different colors and one can observe how some information about genre classification is reserved even at reduced dimensons.
 
 ### Build
-It was important that the frame the installation was built into was easily taken apart for ease of debugging and checks. For that reason, neither the Raspberr Pi nore the circuitry was permanently attached to it. The structure was built with scrap wood rectangles with the one below having its closed off by a wood plate. The higher rectangle was wide enough for all the cables and circuitry to fit but narrow enough to have the sensor board sit on top of it. The two rectangles were put together by two wood pieces and some wood glue.
+It was important that the frame the installation was built into was easily taken apart for ease of debugging and checks. For that reason, neither the Raspberry Pi nor the circuitry was permanently attached to it. The structure was built with scrap wood rectangles with the one below having its bottom closed off by a wood plate. The higher rectangle was wide enough for all the cables and circuitry to fit but narrow enough to have the sensor board sit on top of it. The two rectangles were put together by two wood pieces and some wood glue. 
 
-![The setup outside the installation room](material/frame.JPG)
+![Frame](material/frame.jpg)
+
+
+The prevent the light from bleeding into the opposite sensor from the other side of the installation as well as block light coming from above a small wooden blocking head was constructed and placed on top of the structure. To cover the circuitry and play into the "black box" analogy for recommendation systems a black wool cloth outer layer was put together.
+
+
+![Final structure](material/final_structure.jpg)
+
 
 
 
@@ -62,7 +71,7 @@ It was important that the frame the installation was built into was easily taken
 - The setup approximates a position of the observer making use of the light intensity detected by them.
 - They listen to the sound clip they are closest to based on their position in the embedding space.
 
-![The setup outside the installation room](material/outside_the_door.JPG)
+![The setup outside the installation room](material/outside_the_door.jpg)
 
 ![Person interacting with the installation](material/installation_person.gif)
 
