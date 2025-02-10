@@ -44,6 +44,8 @@ A separate thread is initiated to keep a "timer" for 2 mins and if the song clos
 
 The embedding space is a 800x800 [pygame](https://github.com/pygame) display with the origin at (400,400). Clipping is applied to keep the position value for the observer and the songs in bounds.
 
+![GUI](material/gui.png)
+
 A pygame mixer with 1 channel is used with all 50 clips loaded in as "Sound". Clips are played in a loop until the timer stops the channel.
 
 #### Run the script
