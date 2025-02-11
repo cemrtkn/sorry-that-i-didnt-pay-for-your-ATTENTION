@@ -5,8 +5,7 @@ import pandas as pd
 from matplotlib import cm
 import os
 from gpiozero import MCP3008
-from gpiozero.pins.rpigpio import RPiGPIOFactory  # Import RPi.GPIO pin factory
-import math
+from gpiozero.pins.rpigpio import RPiGPIOFactory  
 import sys
 import threading
 from config import embed_dir, audio_dir

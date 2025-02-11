@@ -3,6 +3,12 @@ import zipfile
 from pydub import AudioSegment
 from io import BytesIO
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.pardir)
+from config import data_directory, audio_dir, embed_dir
+
+
+
 
 BIT_DEPTH = 32768.0
 
@@ -16,7 +22,7 @@ def read_zipped_mp3(file):
     centered_mono = mono_audio.pan(-0.5)
     return centered_mono
 
-data_path = "/Users/cemerturkan/Desktop/personal_projects/data/"
+data_path = data_directory
 metadata_df = pd.read_csv(data_path + 'output_embed/embeddings_metadata.csv', index_col=0)
 
 correct_indices = [int(file_idx.split('_')[-1]) for file_idx in list(metadata_df.index)]

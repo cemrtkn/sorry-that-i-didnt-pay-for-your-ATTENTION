@@ -22,7 +22,7 @@ This is an interactive arts installation exhibited in Bauhaus University's Winte
 ### Embeddings
 The audio embedding space that this installation makes use of was created using the ResNet genre classification model trained in the repo [FFT Recommendation](https://github.com/cemrtkn/FFT_recommendation). The data used to train the model is the "small" variant of the [FMA](https://github.com/mdeff/fma) dataset with 8000 30 second long sound clips from songs and field recordings labeled into 8 genres/classes. Without going too much into the details, the conversion of sound clips to embeddings is as follows:
 1. Take 30 sec long clips from songs and field recordings at 44.1 kHz as a 16 bit audio.
-2. Run it through the process_audio.py script in the above-mentioned repo to obtain [Mel Spectrograms](https://medium.com/analytics-vidhya/understanding-the-mel-spectrogram-fca2afa2ce53) with shape (256, 646).
+2. Run it through the process_audio.py script at [FFT Recommendation](https://github.com/cemrtkn/FFT_recommendation/blob/master/src/process_audio.py) to obtain [Mel Spectrograms](https://medium.com/analytics-vidhya/understanding-the-mel-spectrogram-fca2afa2ce53) with shape (256, 646).
 3. Remove the predictive head of the model to have the model produce embeddings.
 4. Run the spectrograms through the model to collect 1024-dimensional embeddings.
 5. PCA to bring 1024 dimensions to a 2D navigable graph.

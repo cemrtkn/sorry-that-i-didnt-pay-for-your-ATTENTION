@@ -2,9 +2,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
+from config import embed_dir
 
 # Load data
-data_path = "/home/cemerturkan/Desktop/projects/find-my-music/data/output_embed/"
+data_path = embed_dir
 metadata_df = pd.read_csv(data_path + 'embeddings_metadata.csv', index_col=0)
 embeddings = np.load(data_path + 'embeddings.npy')
 print
